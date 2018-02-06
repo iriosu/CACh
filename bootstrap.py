@@ -66,6 +66,8 @@ def ReadPrograms(filename):
             continue
         id_c = int(pieces[0])
         programs[id_c] = Core.Entidades.Carrera(id_c)
+        programs[id_c].ponderado_minimo = int(pieces[10])
+        programs[id_c].cutoff = max(450,int(pieces[10]))*100 # we just initialize the cutoff to be the min pond
         programs[id_c].vacantes_reg = int(pieces[12]) + int(pieces[13])
         programs[id_c].vacantes_bea = int(pieces[-1])
 
@@ -73,7 +75,7 @@ def ReadPrograms(filename):
     return programs
 
 def BootstrapIteration(data):
-    dat_pg, dat_st, boot_list, s = data[0], data[1], data[2], data[3]
+    dat_pg, dat_st, boot_list, s, indir = data[0], data[1], data[2], data[3], data[4]
     procesos = ['reg']
     carreras = dat_pg
     alumnos = {}
@@ -88,7 +90,7 @@ def BootstrapIteration(data):
 
     Core.Algoritmo.EjecutarSeleccion(alumnos, carreras, procesos)
 
-    f = open('outputs/cutoffs_bootstrap_s='+str(s)+'.txt', 'w')
+    f = open(os.path.join(indir, 'cutoffs_bootstrap_s='+str(s)+'.txt'), 'w')
     for c in sorted(carreras):
         f.write(str(c)+';'+str(carreras[c].cutoff)+'\n')
     f.close()
@@ -97,13 +99,13 @@ def BootstrapIteration(data):
 
 if __name__ == '__main__':
     # 0. Parameters and inputs
-    S = 2 # bootstrap iterations
-
+    S = 1 # bootstrap iterations
+    outdir = '../outputs'
     # 1. read programs and vacancies
-    programs = ReadPrograms('/Users/iriosu/Dropbox/PhD/Research/Strategic applications/Solicitud DEMRE 2004-2017/carreras_requisitos.csv')
+    programs = ReadPrograms('../Solicitud DEMRE 2004-2017/carreras_requisitos.csv')
 
     # 2. read applications
-    students = ReadStudents('/Users/iriosu/Dropbox/PhD/Research/Strategic applications/Solicitud DEMRE 2004-2017/ADM2015.csv')
+    students = ReadStudents('../Solicitud DEMRE 2004-2017/ADM2015.csv')
 
     # 3. Sample students for bootstrap
     print 'Sampling students for boostrap'
@@ -112,7 +114,7 @@ if __name__ == '__main__':
 
     indata = []
     for sim in range(S):
-        indata.append((programs, students, bootstrap_samples[sim], sim))
+        indata.append((programs, students, bootstrap_samples[sim], sim, outdir))
 
     np = min(3,multiprocessing.cpu_count())
     # We execute our process for each replication with a pool
@@ -120,9 +122,3 @@ if __name__ == '__main__':
     pool.map(BootstrapIteration, indata)
     pool.close()
     pool.join()
-
-
-
-
-    # de las carreras necesito codigo y vacantes
-    # de los alumnos necesito proceso, puntpond, puntano
