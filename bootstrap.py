@@ -67,7 +67,7 @@ def ReadPrograms(filename):
         id_c = int(pieces[0])
         programs[id_c] = Core.Entidades.Carrera(id_c)
         programs[id_c].ponderado_minimo = int(pieces[10])
-        programs[id_c].cutoff = max(450,int(pieces[10]))*100 # we just initialize the cutoff to be the min pond
+        programs[id_c].cutoff = int(pieces[10])*100 # we just initialize the cutoff to be the min pond
         programs[id_c].vacantes_reg = int(pieces[12]) + int(pieces[13]) + int(pieces[14]) + int(pieces[15])
         programs[id_c].vacantes_bea = int(pieces[-1])
 
