@@ -99,7 +99,7 @@ def BootstrapIteration(data):
 
 if __name__ == '__main__':
     # 0. Parameters and inputs
-    S = 1 # bootstrap iterations
+    S = 3 # bootstrap iterations
     outdir = '../outputs'
     # 1. read programs and vacancies
     programs = ReadPrograms('../Solicitud DEMRE 2004-2017/carreras_requisitos.csv')
