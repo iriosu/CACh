@@ -289,7 +289,7 @@ def ProcesoPostSeleccion(alumnos, carreras):
 					break
 				cont+=1
 			if cont < int(getattr(carrera, 'vacantes_' + pr)):
-				carrera.cutoff = carrera.ponderado_minimo*100
+				carrera.cutoff = carrera.ponderado_minimo
 
 def EjecutarSeleccion(alumnos, carreras, procesos):
 	topa, topu = CrearGrafo(alumnos, carreras, procesos)
