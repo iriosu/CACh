@@ -28,6 +28,8 @@ def ReadStudents(filename):
             print '    Students processed:', ct
         ct+=1
         line = line.strip().rstrip('\r')
+        line = line.strip().rstrip('\r').replace('"','').replace(',','')
+        #print line
         pieces = line.split(';')
         if 'P' in pieces[0]:
             continue
@@ -68,6 +70,8 @@ def ReadPrograms(filename):
         programs[id_c] = Core.Entidades.Carrera(id_c)
         programs[id_c].ponderado_minimo = int(pieces[10])
         programs[id_c].cutoff = int(pieces[10])*100 # we just initialize the cutoff to be the min pond
+        programs[id_c].ponderado_minimo = int(pieces[10])*100
+        programs[id_c].cutoff = int(pieces[10])*100
         programs[id_c].vacantes_reg = int(pieces[12]) + int(pieces[13]) + int(pieces[14]) + int(pieces[15])
         programs[id_c].vacantes_bea = int(pieces[-1])
 
@@ -103,9 +107,11 @@ if __name__ == '__main__':
     outdir = '../outputs'
     # 1. read programs and vacancies
     programs = ReadPrograms('../Solicitud DEMRE 2004-2017/carreras_requisitos.csv')
+    programs = ReadPrograms('../Solicitud DEMRE 2004-2017/carreras_requisitos_2016.csv')
 
     # 2. read applications
     students = ReadStudents('../Solicitud DEMRE 2004-2017/ADM2015.csv')
+    students = ReadStudents('../Solicitud DEMRE 2004-2017/ADM2016.csv')
 
     # 3. Sample students for bootstrap
     print 'Sampling students for boostrap'
